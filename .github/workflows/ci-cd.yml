@@ -108,10 +108,18 @@ jobs:
         with:
           node-version: 22
 
-      - name: Run npm audit on Frontend Dependencies
+      - name: Run npm audit on Production Dependencies
         working-directory: frontend
         run: |
-          npm audit --audit-level=high
+          npm audit --omit=dev --audit-level=moderate
+          npm audit --json > audit.json || true
+
+      - name: Upload Frontend npm Audit Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-npm-audit
+          path: frontend/audit.json
+          retention-days: 7
 
   # ==============================================================================
   # Job 3: Hardened Container Build, Trivy Vulnerability Gate, GHCR Push
