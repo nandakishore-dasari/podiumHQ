@@ -1,4 +1,21 @@
-# Dependencies & Environments
+# ==============================
+# Secrets & Environment Variables
+# ==============================
+.env
+.env.*
+!.env.example
+
+*.pem
+*.key
+*.cert
+*.crt
+id_rsa*
+kubeconfig*
+*.kubeconfig
+
+# ==============================
+# Python & Virtual Environments
+# ==============================
 __pycache__/
 *.py[cod]
 *$py.class
@@ -8,6 +25,9 @@ env/
 venv/
 .venv/
 ENV/
+*.egg
+*.egg-info/
+.installed.cfg
 build/
 develop-eggs/
 dist/
@@ -22,15 +42,14 @@ var/
 wheels/
 pip-wheel-metadata/
 share/python-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
 *.db
 *.sqlite
 *.sqlite3
 
+# ==============================
 # Testing & Coverage
-.cache
+# ==============================
+.cache/
 .pytest_cache/
 .coverage
 .coverage.*
@@ -42,31 +61,24 @@ coverage.xml
 .mypy_cache/
 .ruff_cache/
 
-# Node & Frontend
+# ==============================
+# Node.js & Frontend
+# ==============================
 node_modules/
 .npm/
 dist/
 dist-ssr/
 *.local
 
-# Secrets, Environment & Credentials
-.env
-.env.local
-.env.*.local
-*.pem
-*.key
-*.cert
-*.crt
-id_rsa*
-kubeconfig*
-*.kubeconfig
-
-# Terraform Local Files
+# ==============================
+# Terraform
+# ==============================
 **/.terraform/*
 *.tfstate
 *.tfstate.*
-crash.log
 *.tfvars
+!*.tfvars.example
+crash.log
 override.tf
 override.tf.json
 *_override.tf
@@ -74,7 +86,12 @@ override.tf.json
 .terraformrc
 terraform.rc
 
-# IDE & OS
+# Keep Terraform dependency lock files
+!.terraform.lock.hcl
+
+# ==============================
+# IDE & Operating System
+# ==============================
 .idea/
 .vscode/
 *.swp
@@ -82,3 +99,19 @@ terraform.rc
 *~
 .DS_Store
 Thumbs.db
+
+# Temporary PowerPoint / Office files
+~$*
+
+# ==============================
+# Kubernetes & Generated Files
+# ==============================
+*.tmp
+*.bak
+
+# ==============================
+# Local Archive & Prompts
+# ==============================
+_local_archive/
+local_archive/
+*_student.pptx
