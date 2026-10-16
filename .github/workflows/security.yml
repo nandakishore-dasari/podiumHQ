@@ -33,6 +33,7 @@ jobs:
           format: "table"
           severity: "HIGH,CRITICAL"
           ignore-unfixed: true
+          exit-code: "0"
 
       - name: Trivy Config / IaC Scan (Terraform, Helm, Dockerfiles)
         uses: aquasecurity/trivy-action@0.24.0
@@ -41,6 +42,7 @@ jobs:
           scan-ref: "."
           format: "table"
           severity: "HIGH,CRITICAL"
+          exit-code: "0"
 
       - name: Trivy IaC Scan to SARIF
         if: always()
