@@ -1,18 +1,34 @@
 global:
   environment: development
-  namespace: podiumhq-dev
+  namespace: podiumhq
 
 backend:
   replicaCount: 1
+  image:
+    repository: podiumhq-backend
+    tag: "local"
+    pullPolicy: IfNotPresent
   autoscaling:
     enabled: false
 
 frontend:
   replicaCount: 1
+  image:
+    repository: podiumhq-frontend
+    tag: "local"
+    pullPolicy: IfNotPresent
 
 postgres:
   persistence:
     size: 2Gi
+    storageClass: "standard"
 
 ingress:
   host: "podiumhq.local"
+
+monitoring:
+  serviceMonitor:
+    enabled: false
+
+migrationJob:
+  enabled: false

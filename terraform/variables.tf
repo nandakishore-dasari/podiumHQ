@@ -4,6 +4,12 @@ variable "aws_region" {
   default     = "ap-south-1"
 }
 
+variable "availability_zones" {
+  description = "Explicit list of AWS Availability Zones (bypasses ec2:DescribeAvailabilityZones SCP restriction)"
+  type        = list(string)
+  default     = ["ap-south-1a", "ap-south-1b", "ap-south-1c"]
+}
+
 variable "project_name" {
   description = "Unique project identifier"
   type        = string

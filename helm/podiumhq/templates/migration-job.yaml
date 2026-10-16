@@ -1,3 +1,4 @@
+{{- if .Values.migrationJob.enabled }}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -27,3 +28,4 @@ spec:
           env:
             - name: DATABASE_URL
               value: "postgresql+psycopg://{{ .Values.postgres.credentials.user }}:{{ .Values.postgres.credentials.password }}@{{ include "podiumhq.fullname" . }}-postgres:5432/{{ .Values.postgres.credentials.database }}"
+{{- end }}

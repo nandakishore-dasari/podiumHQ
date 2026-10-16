@@ -81,3 +81,6 @@ ingress:
 monitoring:
   serviceMonitor:
     enabled: true
+
+migrationJob:
+  enabled: true

@@ -1,0 +1,26 @@
+﻿NAME                                     READY   STATUS    RESTARTS      AGE
+pod/podiumhq-backend-744cb69b76-p94tr    1/1     Running   2 (46s ago)   65s
+pod/podiumhq-frontend-84566d4b98-fpz54   1/1     Running   0             65s
+pod/podiumhq-postgres-0                  1/1     Running   0             65s
+
+NAME                        TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE
+service/podiumhq-backend    ClusterIP   10.96.109.219   <none>        8000/TCP   65s
+service/podiumhq-frontend   ClusterIP   10.96.108.148   <none>        8080/TCP   65s
+service/podiumhq-postgres   ClusterIP   10.96.229.219   <none>        5432/TCP   65s
+
+NAME                                READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/podiumhq-backend    1/1     1            1           65s
+deployment.apps/podiumhq-frontend   1/1     1            1           65s
+
+NAME                                           DESIRED   CURRENT   READY   AGE
+replicaset.apps/podiumhq-backend-744cb69b76    1         1         1       65s
+replicaset.apps/podiumhq-frontend-84566d4b98   1         1         1       65s
+
+NAME                                 READY   AGE
+statefulset.apps/podiumhq-postgres   1/1     65s
+
+NAME                                                      STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
+persistentvolumeclaim/postgres-data-podiumhq-postgres-0   Bound    pvc-14789909-67a9-477b-9dc0-a93008f1ee0f   2Gi        RWO            standard       <unset>                 65s
+
+NAME                                 CLASS    HOSTS            ADDRESS   PORTS   AGE
+ingress.networking.k8s.io/podiumhq   <none>   podiumhq.local             80      65s
