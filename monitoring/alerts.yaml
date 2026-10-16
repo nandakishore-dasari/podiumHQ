@@ -1,0 +1,28 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: podiumhq-alert-rules
+  namespace: podiumhq
+  labels:
+    release: kube-prometheus-stack
+spec:
+  groups:
+    - name: podiumhq.rules
+      rules:
+        - alert: PodiumHQHighErrorRate
+          expr: sum(rate(http_requests_total{status=~"5.."}[5m])) / sum(rate(http_requests_total[5m])) * 100 > 1
+          for: 2m
+          labels:
+            severity: critical
+          annotations:
+            summary: "PodiumHQ backend experiencing >1% HTTP 5xx errors"
+            description: "5xx error rate is currently at {{ $value }}%."
+
+        - alert: PodiumHQBackendDown
+          expr: up{job="podiumhq-backend"} == 0
+          for: 1m
+          labels:
+            severity: critical
+          annotations:
+            summary: "PodiumHQ backend service is DOWN"
+            description: "All endpoints for podiumhq-backend are unreachable."

@@ -1,0 +1,83 @@
+# ==============================================================================
+# PodiumHQ Helm Values
+# ==============================================================================
+
+global:
+  environment: production
+  namespace: podiumhq
+
+backend:
+  replicaCount: 2
+  image:
+    repository: ghcr.io/nandukrishnak/podiumhq-backend
+    tag: "1.0.0"
+    pullPolicy: IfNotPresent
+  port: 8000
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 6
+    targetCPUUtilizationPercentage: 60
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 10001
+    runAsGroup: 10001
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: false
+    capabilities:
+      drop:
+        - ALL
+
+frontend:
+  replicaCount: 2
+  image:
+    repository: ghcr.io/nandukrishnak/podiumhq-frontend
+    tag: "1.0.0"
+    pullPolicy: IfNotPresent
+  port: 8080
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 250m
+      memory: 256Mi
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 101
+    runAsGroup: 101
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: false
+    capabilities:
+      drop:
+        - ALL
+
+postgres:
+  enabled: true
+  image:
+    repository: postgres
+    tag: "16-alpine"
+  persistence:
+    enabled: true
+    storageClass: "gp3"
+    size: 10Gi
+  credentials:
+    database: podiumhq_db
+    user: podium_user
+    password: podium_secure_password_2026
+
+ingress:
+  enabled: true
+  className: "nginx"
+  host: "podiumhq.local"
+
+monitoring:
+  serviceMonitor:
+    enabled: true

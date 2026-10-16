@@ -1,0 +1,15 @@
+PodiumHQ has been successfully deployed!
+
+1. Get application URL:
+{{- if .Values.ingress.enabled }}
+   http://{{ .Values.ingress.host }}
+{{- else }}
+   kubectl port-forward svc/{{ include "podiumhq.fullname" . }}-frontend 3000:8080 -n {{ .Release.Namespace }}
+   Open http://localhost:3000 in your browser.
+{{- end }}
+
+2. Backend API Docs:
+   http://{{ .Values.ingress.host }}/docs (or port-forward backend to 8000)
+
+3. Prometheus Metrics:
+   http://{{ .Values.ingress.host }}/metrics

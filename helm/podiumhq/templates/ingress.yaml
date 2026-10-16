@@ -1,0 +1,44 @@
+{{- if .Values.ingress.enabled -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "podiumhq.fullname" . }}
+  labels:
+    {{- include "podiumhq.labels" . | nindent 4 }}
+  annotations:
+    kubernetes.io/ingress.class: {{ .Values.ingress.className }}
+    nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+spec:
+  rules:
+    - host: {{ .Values.ingress.host }}
+      http:
+        paths:
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "podiumhq.fullname" . }}-backend
+                port:
+                  number: 8000
+          - path: /health
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "podiumhq.fullname" . }}-backend
+                port:
+                  number: 8000
+          - path: /ready
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "podiumhq.fullname" . }}-backend
+                port:
+                  number: 8000
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "podiumhq.fullname" . }}-frontend
+                port:
+                  number: 8080
+{{- end }}

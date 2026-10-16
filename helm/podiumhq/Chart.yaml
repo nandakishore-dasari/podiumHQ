@@ -1,0 +1,9 @@
+apiVersion: v2
+name: podiumhq
+description: Cloud-native Helm chart for PodiumHQ Hackathon Judging Platform
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+maintainers:
+  - name: DevSecOps Engineering
+    email: devsecops@podiumhq.local
