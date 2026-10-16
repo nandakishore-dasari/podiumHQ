@@ -5,21 +5,23 @@ and triggers Prometheus score metrics.
 """
 
 from typing import List, Optional
+
 from fastapi import APIRouter, Depends, HTTPException, Query, status
-from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm import Session
+
 from backend.app.database import get_db
-from backend.app.models.round import Round, RoundStatus
+from backend.app.metrics import record_score_submission
 from backend.app.models.criterion import Criterion
-from backend.app.models.team import Team, TeamStatus
 from backend.app.models.judge import Judge
+from backend.app.models.round import Round, RoundStatus
 from backend.app.models.score import Score
+from backend.app.models.team import Team, TeamStatus
 from backend.app.schemas.score import (
+    BatchScoreSubmission,
     ScoreCreate,
     ScoreResponse,
-    BatchScoreSubmission,
 )
-from backend.app.metrics import record_score_submission
 
 router = APIRouter(prefix="/scores", tags=["Scores"])
 
@@ -123,7 +125,12 @@ def submit_score(payload: ScoreCreate, db: Session = Depends(get_db)):
     return score_entry
 
 
-@router.post("/batch", response_model=List[ScoreResponse], status_code=status.HTTP_201_CREATED, summary="Submit Batch Criteria Scores")
+@router.post(
+    "/batch",
+    response_model=List[ScoreResponse],
+    status_code=status.HTTP_201_CREATED,
+    summary="Submit Batch Criteria Scores",
+)
 def submit_batch_scores(payload: BatchScoreSubmission, db: Session = Depends(get_db)):
     """Allows a judge to submit scores for all criteria of a round at once."""
     round_obj = db.query(Round).filter(Round.id == payload.round_id).first()

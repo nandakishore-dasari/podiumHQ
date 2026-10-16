@@ -4,25 +4,26 @@ Configures CORS, Request ID middleware, Prometheus instrumentation,
 structured logging, and routers.
 """
 
-import uuid
 import time
+import uuid
 from contextlib import asynccontextmanager
+
 from fastapi import FastAPI, Request, status
-from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from prometheus_fastapi_instrumentator import Instrumentator
 
 from backend.app.config import settings
-from backend.app.logging import setup_logging, request_id_ctx
-from backend.app.database import engine, Base
+from backend.app.database import Base, engine
+from backend.app.logger import request_id_ctx, setup_logging
 from backend.app.routers import (
-    ops_router,
     events_router,
-    teams_router,
     judges_router,
+    leaderboard_router,
+    ops_router,
     rounds_router,
     scores_router,
-    leaderboard_router,
+    teams_router,
 )
 
 # Initialize structured logging
@@ -31,9 +32,7 @@ logger = setup_logging(settings.LOG_LEVEL)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    logger.info(
-        f"Starting {settings.PROJECT_NAME} v{settings.APP_VERSION} in {settings.ENVIRONMENT} mode"
-    )
+    logger.info(f"Starting {settings.PROJECT_NAME} v{settings.APP_VERSION} in {settings.ENVIRONMENT} mode")
     # Create tables if not running Alembic migrations
     Base.metadata.create_all(bind=engine)
     yield

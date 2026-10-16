@@ -4,17 +4,18 @@ Idempotently populates the database with realistic hackathon events, rounds,
 criteria, judges, teams, and scores for demo and development.
 """
 
-import sys
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timedelta, timezone
+
 from sqlalchemy.orm import Session
-from backend.app.database import SessionLocal, engine, Base
+
+from backend.app.database import Base, SessionLocal, engine
+from backend.app.metrics import record_score_submission, update_team_status_gauge
+from backend.app.models.criterion import Criterion
 from backend.app.models.event import Event, EventStatus
-from backend.app.models.team import Team, TeamStatus
 from backend.app.models.judge import Judge
 from backend.app.models.round import Round, RoundStatus
-from backend.app.models.criterion import Criterion
 from backend.app.models.score import Score
-from backend.app.metrics import record_score_submission, update_team_status_gauge
+from backend.app.models.team import Team, TeamStatus
 
 
 def seed_database(db: Session) -> None:
@@ -230,25 +231,72 @@ def seed_database(db: Session) -> None:
     # Seed scores for top teams
     score_matrix = [
         # ZeroTrust Guard (Leading podium contender)
-        (judges[0].id, teams[0].id, round1.id, criteria_r1[0].id, 9.8, "Flawless non-root container profile and read-only FS."),
-        (judges[0].id, teams[0].id, round1.id, criteria_r1[1].id, 9.6, "Clean GitHub Actions workflow using pinned commit SHAs."),
-        (judges[0].id, teams[0].id, round1.id, criteria_r1[2].id, 9.5, "Terraform VPC + EKS modularity is production-grade."),
-        (judges[0].id, teams[0].id, round1.id, criteria_r1[3].id, 9.7, "Extensive Mermaid architecture diagrams and ADRs."),
-        (judges[1].id, teams[0].id, round1.id, criteria_r1[0].id, 9.9, "Zero Trivy CVEs, excellent dropped capabilities."),
+        (
+            judges[0].id,
+            teams[0].id,
+            round1.id,
+            criteria_r1[0].id,
+            9.8,
+            "Flawless non-root container profile and read-only FS.",
+        ),
+        (
+            judges[0].id,
+            teams[0].id,
+            round1.id,
+            criteria_r1[1].id,
+            9.6,
+            "Clean GitHub Actions workflow using pinned commit SHAs.",
+        ),
+        (
+            judges[0].id,
+            teams[0].id,
+            round1.id,
+            criteria_r1[2].id,
+            9.5,
+            "Terraform VPC + EKS modularity is production-grade.",
+        ),
+        (
+            judges[0].id,
+            teams[0].id,
+            round1.id,
+            criteria_r1[3].id,
+            9.7,
+            "Extensive Mermaid architecture diagrams and ADRs.",
+        ),
+        (
+            judges[1].id,
+            teams[0].id,
+            round1.id,
+            criteria_r1[0].id,
+            9.9,
+            "Zero Trivy CVEs, excellent dropped capabilities.",
+        ),
         (judges[1].id, teams[0].id, round1.id, criteria_r1[1].id, 9.4, "Quality gates in correct sequential order."),
         (judges[1].id, teams[0].id, round1.id, criteria_r1[2].id, 9.6, "HPA and PDB configured with precision."),
         (judges[1].id, teams[0].id, round1.id, criteria_r1[3].id, 9.8, "Superb documentation clarity."),
-        
         # NeuroMesh Orchestrator (Silver rank)
-        (judges[0].id, teams[1].id, round1.id, criteria_r1[0].id, 9.2, "Solid security posture, minor memory limit tuning needed."),
-        (judges[0].id, teams[1].id, round1.id, criteria_r1[1].id, 9.4, "Automated GitOps tag bumping works seamlessly."),
+        (
+            judges[0].id,
+            teams[1].id,
+            round1.id,
+            criteria_r1[0].id,
+            9.2,
+            "Solid security posture, minor memory limit tuning needed.",
+        ),
+        (
+            judges[0].id,
+            teams[1].id,
+            round1.id,
+            criteria_r1[1].id,
+            9.4,
+            "Automated GitOps tag bumping works seamlessly.",
+        ),
         (judges[0].id, teams[1].id, round1.id, criteria_r1[2].id, 9.3, "EKS add-ons like EBS CSI properly installed."),
         (judges[0].id, teams[1].id, round1.id, criteria_r1[3].id, 9.1, "Clear runbook for ArgoCD self-heal."),
         (judges[2].id, teams[1].id, round1.id, criteria_r1[0].id, 9.3, "Strong non-root configuration."),
         (judges[2].id, teams[1].id, round1.id, criteria_r1[1].id, 9.5, "Pipeline coverage gate passes cleanly."),
         (judges[2].id, teams[1].id, round1.id, criteria_r1[2].id, 9.2, "Multi-replica rolling updates verified."),
         (judges[2].id, teams[1].id, round1.id, criteria_r1[3].id, 9.0, "Great architectural rationale."),
-
         # VaultKube Sentinel (Bronze rank)
         (judges[1].id, teams[2].id, round1.id, criteria_r1[0].id, 8.8, "High security focus, good KMS IRSA binding."),
         (judges[1].id, teams[2].id, round1.id, criteria_r1[1].id, 8.9, "Clean CI triggers and caching."),
@@ -258,7 +306,6 @@ def seed_database(db: Session) -> None:
         (judges[3].id, teams[2].id, round1.id, criteria_r1[1].id, 8.8, "Well-structured unit and integration tests."),
         (judges[3].id, teams[2].id, round1.id, criteria_r1[2].id, 8.9, "Good Helm template rendering."),
         (judges[3].id, teams[2].id, round1.id, criteria_r1[3].id, 8.6, "Good troubleshooting lab."),
-
         # PulseMetrics AI (Under Review)
         (judges[2].id, teams[3].id, round1.id, criteria_r1[0].id, 8.2, "Decent security, need slightly stricter PDB."),
         (judges[2].id, teams[3].id, round1.id, criteria_r1[1].id, 8.4, "Fast builds with Docker Buildx."),
@@ -290,7 +337,9 @@ def seed_database(db: Session) -> None:
     }
     update_team_status_gauge(counts)
 
-    print("Database seeding completed successfully with 1 Event, 2 Rounds, 7 Criteria, 4 Judges, 7 Teams, and 28 Scores.")
+    print(
+        "Database seeding completed successfully with 1 Event, 2 Rounds, 7 Criteria, 4 Judges, 7 Teams, and 28 Scores."
+    )
 
 
 if __name__ == "__main__":

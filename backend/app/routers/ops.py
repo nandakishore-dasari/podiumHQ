@@ -3,10 +3,11 @@ Operational Endpoints Router
 Exposes root metadata, liveness (/health), database readiness (/ready), and Prometheus metrics (/metrics).
 """
 
-from fastapi import APIRouter, Depends, HTTPException, status, Response
-from sqlalchemy.orm import Session
+from fastapi import APIRouter, Depends, HTTPException, Response, status
+from prometheus_client import CONTENT_TYPE_LATEST, generate_latest
 from sqlalchemy import text
-from prometheus_client import generate_latest, CONTENT_TYPE_LATEST
+from sqlalchemy.orm import Session
+
 from backend.app.config import settings
 from backend.app.database import get_db
 

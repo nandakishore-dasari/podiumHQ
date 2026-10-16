@@ -3,8 +3,10 @@ Judge Model for PodiumHQ
 """
 
 from datetime import datetime, timezone
-from sqlalchemy import Column, Integer, String, Boolean, DateTime
+
+from sqlalchemy import Boolean, Column, DateTime, Integer, String
 from sqlalchemy.orm import relationship
+
 from backend.app.database import Base
 
 

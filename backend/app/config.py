@@ -4,6 +4,7 @@ Reads configuration from environment variables with strong typing and sensible d
 """
 
 from typing import List, Union
+
 from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 

@@ -4,8 +4,10 @@ Event Model for PodiumHQ
 
 import enum
 from datetime import datetime, timezone
-from sqlalchemy import Column, Integer, String, Text, DateTime, Enum
+
+from sqlalchemy import Column, DateTime, Enum, Integer, String, Text
 from sqlalchemy.orm import relationship
+
 from backend.app.database import Base
 
 

@@ -3,8 +3,10 @@ Team Schemas
 """
 
 from datetime import datetime
-from typing import Optional, Dict
-from pydantic import BaseModel, Field, HttpUrl, ConfigDict
+from typing import Dict, Optional
+
+from pydantic import BaseModel, ConfigDict, Field
+
 from backend.app.models.team import TeamStatus
 
 

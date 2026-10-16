@@ -6,8 +6,8 @@ Provides JSON logging format for containerized observability and request tracing
 import json
 import logging
 import sys
-from datetime import datetime, timezone
 from contextvars import ContextVar
+from datetime import datetime, timezone
 from typing import Any, Dict
 
 request_id_ctx: ContextVar[str] = ContextVar("request_id_ctx", default="")

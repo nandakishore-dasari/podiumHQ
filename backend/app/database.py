@@ -4,8 +4,10 @@ Configures SQLAlchemy 2.0 with connection pooling and session generators.
 """
 
 from typing import Generator
+
 from sqlalchemy import create_engine
-from sqlalchemy.orm import declarative_base, sessionmaker, Session
+from sqlalchemy.orm import Session, declarative_base, sessionmaker
+
 from backend.app.config import settings
 
 # Engine configuration depending on DB backend

@@ -2,9 +2,11 @@
 Judges Router for PodiumHQ
 """
 
-from typing import List, Optional
+from typing import List
+
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
+
 from backend.app.database import get_db
 from backend.app.models.judge import Judge
 from backend.app.schemas.judge import JudgeCreate, JudgeResponse

@@ -4,8 +4,10 @@ Judging Round Model for PodiumHQ
 
 import enum
 from datetime import datetime, timezone
-from sqlalchemy import Column, Integer, String, Float, DateTime, Enum, ForeignKey
+
+from sqlalchemy import Column, DateTime, Enum, Float, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
+
 from backend.app.database import Base
 
 

@@ -4,7 +4,8 @@ Judge Schemas
 
 from datetime import datetime
 from typing import Optional
-from pydantic import BaseModel, Field, EmailStr, ConfigDict
+
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
 
 class JudgeBase(BaseModel):

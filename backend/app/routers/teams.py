@@ -5,24 +5,26 @@ KPI statistics, pagination, and multi-field search.
 """
 
 from datetime import datetime, timezone
-from typing import Optional, Dict
+from typing import Dict, Optional
+
 from fastapi import APIRouter, Depends, HTTPException, Query, status
+from sqlalchemy import func, or_
 from sqlalchemy.orm import Session
-from sqlalchemy import or_, func
+
 from backend.app.database import get_db
+from backend.app.metrics import update_team_status_gauge
 from backend.app.models.event import Event
-from backend.app.models.team import Team, TeamStatus
 from backend.app.models.score import Score
+from backend.app.models.team import Team, TeamStatus
+from backend.app.schemas.common import PaginatedResponse
 from backend.app.schemas.team import (
     TeamCreate,
-    TeamUpdate,
-    TeamStatusUpdate,
     TeamResponse,
     TeamStatsResponse,
+    TeamStatusUpdate,
+    TeamUpdate,
 )
-from backend.app.schemas.common import PaginatedResponse
 from backend.app.services.scoring_engine import ScoringEngine
-from backend.app.metrics import update_team_status_gauge
 
 router = APIRouter(prefix="/teams", tags=["Teams"])
 
@@ -134,11 +136,7 @@ def register_team(payload: TeamCreate, db: Session = Depends(get_db)):
         )
 
     # Check unique team name within event
-    duplicate = (
-        db.query(Team)
-        .filter(Team.event_id == payload.event_id, Team.name.ilike(payload.name))
-        .first()
-    )
+    duplicate = db.query(Team).filter(Team.event_id == payload.event_id, Team.name.ilike(payload.name)).first()
     if duplicate:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,

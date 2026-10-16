@@ -5,14 +5,16 @@ Provides real-time ranked results, round breakdowns, and rank delta indicators.
 
 from datetime import datetime, timezone
 from typing import Optional
+
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
+
 from backend.app.database import get_db
+from backend.app.metrics import LEADERBOARD_REQUESTS_TOTAL
 from backend.app.models.event import Event
 from backend.app.models.round import Round, RoundStatus
 from backend.app.schemas.leaderboard import LeaderboardResponse
 from backend.app.services.scoring_engine import ScoringEngine
-from backend.app.metrics import LEADERBOARD_REQUESTS_TOTAL
 
 router = APIRouter(prefix="/leaderboard", tags=["Leaderboard"])
 

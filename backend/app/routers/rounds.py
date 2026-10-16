@@ -3,13 +3,15 @@ Judging Rounds and Criteria Router
 """
 
 from typing import List, Optional
+
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
+
 from backend.app.database import get_db
-from backend.app.models.round import Round, RoundStatus
 from backend.app.models.criterion import Criterion
-from backend.app.schemas.round import RoundCreate, RoundResponse
+from backend.app.models.round import Round
 from backend.app.schemas.criterion import CriterionCreate, CriterionResponse
+from backend.app.schemas.round import RoundCreate, RoundResponse
 
 router = APIRouter(tags=["Rounds & Criteria"])
 
@@ -47,7 +49,9 @@ def list_criteria(round_id: Optional[int] = Query(None), db: Session = Depends(g
     return query.order_by(Criterion.id.asc()).all()
 
 
-@router.post("/criteria", response_model=CriterionResponse, status_code=status.HTTP_201_CREATED, summary="Add Criterion")
+@router.post(
+    "/criteria", response_model=CriterionResponse, status_code=status.HTTP_201_CREATED, summary="Add Criterion"
+)
 def create_criterion(payload: CriterionCreate, db: Session = Depends(get_db)):
     round_obj = db.query(Round).filter(Round.id == payload.round_id).first()
     if not round_obj:

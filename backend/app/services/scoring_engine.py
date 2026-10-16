@@ -4,14 +4,14 @@ Implements domain-driven weighted score aggregation, tie-breaking rules,
 judge consensus variance, and leaderboard generation.
 """
 
-from typing import List, Dict, Any, Tuple
+from typing import Any, Dict, List, Tuple
+
 from sqlalchemy.orm import Session
-from sqlalchemy import func
-from backend.app.models.event import Event
-from backend.app.models.team import Team, TeamStatus
-from backend.app.models.round import Round, RoundStatus
+
 from backend.app.models.criterion import Criterion
+from backend.app.models.round import Round
 from backend.app.models.score import Score
+from backend.app.models.team import Team
 from backend.app.schemas.leaderboard import LeaderboardEntry, RoundScoreBreakdown
 
 
@@ -25,14 +25,8 @@ class ScoringEngine:
         teams = db.query(Team).filter(Team.event_id == event_id).all()
         rounds = db.query(Round).filter(Round.event_id == event_id).all()
         criteria = (
-            db.query(Criterion)
-            .join(Round, Round.id == Criterion.round_id)
-            .filter(Round.event_id == event_id)
-            .all()
+            db.query(Criterion).join(Round, Round.id == Criterion.round_id).filter(Round.event_id == event_id).all()
         )
-
-        criteria_map = {c.id: c for c in criteria}
-        round_map = {r.id: r for r in rounds}
 
         unranked_entries: List[Tuple[float, float, Any, Dict[str, Any]]] = []
 
@@ -104,16 +98,16 @@ class ScoringEngine:
             )
 
         # Sort: Composite Score DESC, Highest Criterion Score DESC, Submission Time ASC
-        unranked_entries.sort(
-            key=lambda x: (-x[0], -x[1], x[2].timestamp() if x[2] else 0)
-        )
+        unranked_entries.sort(key=lambda x: (-x[0], -x[1], x[2].timestamp() if x[2] else 0))
 
         ranked_items: List[LeaderboardEntry] = []
         for index, (_, _, _, data) in enumerate(unranked_entries, start=1):
             team_obj: Team = data["team"]
 
             # Compute rank delta: simulate realistic delta based on team ID variance
-            prev_rank = ((index + (team_obj.id % 3) - 1) % len(unranked_entries)) + 1 if len(unranked_entries) > 1 else index
+            prev_rank = (
+                ((index + (team_obj.id % 3) - 1) % len(unranked_entries)) + 1 if len(unranked_entries) > 1 else index
+            )
             rank_delta = prev_rank - index
 
             ranked_items.append(
@@ -142,12 +136,7 @@ class ScoringEngine:
         Computes the judge consensus index (0.0 to 1.0) using normalized variance
         across judge scores for identical team and criterion evaluations.
         """
-        scores = (
-            db.query(Score)
-            .join(Team, Team.id == Score.team_id)
-            .filter(Team.event_id == event_id)
-            .all()
-        )
+        scores = db.query(Score).join(Team, Team.id == Score.team_id).filter(Team.event_id == event_id).all()
 
         if not scores:
             return 1.0

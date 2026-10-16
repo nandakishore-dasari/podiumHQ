@@ -4,17 +4,19 @@ Records individual criterion scores submitted by judges.
 """
 
 from datetime import datetime, timezone
+
 from sqlalchemy import (
     Column,
-    Integer,
-    Float,
-    Text,
     DateTime,
+    Float,
     ForeignKey,
-    UniqueConstraint,
     Index,
+    Integer,
+    Text,
+    UniqueConstraint,
 )
 from sqlalchemy.orm import relationship
+
 from backend.app.database import Base
 
 

@@ -3,14 +3,16 @@ Events Router for PodiumHQ
 Provides full CRUD, listing, pagination, and status filtering for hackathon events.
 """
 
-from typing import List, Optional
+from typing import Optional
+
 from fastapi import APIRouter, Depends, HTTPException, Query, status
-from sqlalchemy.orm import Session
 from sqlalchemy import or_
+from sqlalchemy.orm import Session
+
 from backend.app.database import get_db
 from backend.app.models.event import Event, EventStatus
-from backend.app.schemas.event import EventCreate, EventUpdate, EventResponse
 from backend.app.schemas.common import PaginatedResponse
+from backend.app.schemas.event import EventCreate, EventResponse, EventUpdate
 
 router = APIRouter(prefix="/events", tags=["Events"])
 
