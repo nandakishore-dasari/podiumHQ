@@ -8,6 +8,13 @@
 
 ---
 
+> ### 📸 Complete Submission Screenshot Evidence Gallery
+> **All verified screenshots proving 100% compliance across all 10 rubric modules are cataloged and documented in:**  
+> 👉 [**`docs/evidence/screenshots/all-screenshots.md`**](docs/evidence/screenshots/all-screenshots.md) 👈  
+> *(Direct proof for CI/CD, Gitleaks, Pytest 90% Cov, ESLint/Audit, Terraform Plan & Destroy, Docker Compose, Non-Root UIDs, Kubernetes Pods/PVC, Web UI, Swagger API, and Prometheus Metrics)*
+
+---
+
 > ### 🎥 Project Demonstration & Slides
 > * **Demo Video**: `<!-- TODO: add after recording -->` <!-- Video walkthrough (6-8 mins) will be linked here once recorded: https://youtu.be/EXAMPLE or release asset -->
 > * **Presentation Slides (PDF)**: [demo/slides.pdf](demo/slides.pdf)
@@ -66,7 +73,7 @@ flowchart TD
     end
 
     subgraph GitOps_Delivery["3. GitOps Continuous Delivery (ArgoCD)"]
-        Job4 -->|Auto-Commit [skip ci]| GH
+        Job4 -->|"Auto-Commit (skip ci)"| GH
         GH -->|Polls Repo & Syncs| Argo["ArgoCD Controller (argocd/application.yaml)"]
     end
 
@@ -609,7 +616,7 @@ A comprehensive visual catalog of all 24 verified screenshots is documented in [
 
 ## 13. Demo Video & Presentation Slides
 
-* **Demo Video**: `<!-- TODO: add after recording -->` *(Record a 6–8 minute walkthrough showing GitHub Actions, Terraform plan, Kubernetes workloads, web UI, and metrics. See [`docs/VIDEO_SCRIPT.md`](docs/VIDEO_SCRIPT.md) or [`STUDENT_SUBMISSION_AND_DEMO_GUIDE.md`](STUDENT_SUBMISSION_AND_DEMO_GUIDE.md) for the exact script).*
+* **Demo Video**: `<!-- TODO: add after recording -->` *(Record a 6–8 minute walkthrough showing GitHub Actions, Terraform plan, Kubernetes workloads, web UI, and metrics. See [`docs/VIDEO_SCRIPT.md`](docs/VIDEO_SCRIPT.md) for the exact script).*
 * **Presentation Slides (PDF)**: [demo/slides.pdf](demo/slides.pdf)
 * **Presentation Slides (PowerPoint)**: [demo/slides.pptx](demo/slides.pptx)
 * **Student Presentation Deck**: [demo/presentation_student.pptx](demo/presentation_student.pptx)
@@ -730,8 +737,7 @@ podiumHQ/
 ├── docker-compose.yml                         # Multi-container orchestration (backend, frontend, postgres)
 ├── Makefile                                   # Developer workflow shortcuts
 ├── pull_request_template.md                   # PR template with DevSecOps quality and security checklist
-├── README.md                                  # Main project documentation and runbook
-└── STUDENT_SUBMISSION_AND_DEMO_GUIDE.md       # Master human-readable guide for submission and video recording
+└── README.md                                  # Main project documentation and runbook
 ```
 
 ---
