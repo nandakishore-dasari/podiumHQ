@@ -3,7 +3,27 @@ Pytest Test Fixtures and In-Memory Database Configuration
 Uses SQLite with StaticPool to ensure test isolation with zero dependencies on real databases.
 """
 
+import sys
+from pathlib import Path
 from typing import Generator
+
+# Ensure both repo root and backend directory are in sys.path
+_conftest_path = Path(__file__).resolve()
+_backend_dir = _conftest_path.parent.parent
+_repo_root = _backend_dir.parent
+for _p in [str(_repo_root), str(_backend_dir)]:
+    if _p not in sys.path:
+        sys.path.insert(0, _p)
+
+# Also ensure 'backend' can be resolved if executed directly from inside backend dir
+if "backend" not in sys.modules and (_backend_dir / "app").exists():
+    try:
+        import backend  # noqa: F401
+    except ImportError:
+        import types
+        _pkg = types.ModuleType("backend")
+        _pkg.__path__ = [str(_backend_dir)]
+        sys.modules["backend"] = _pkg
 
 import pytest
 from fastapi.testclient import TestClient

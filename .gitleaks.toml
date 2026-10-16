@@ -1,0 +1,21 @@
+# Gitleaks Configuration for PodiumHQ
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Global allowlist for dummy templates, tests, and mock manifests"
+paths = [
+    '''\.env\.example$''',
+    '''scripts/bootstrap-secrets\.sh$''',
+    '''docker-compose\.ya?ml$''',
+    '''troubleshooting/.*''',
+    '''docs/.*''',
+    '''backend/tests/.*''',
+    '''tests/.*'''
+]
+regexes = [
+    '''podium_secure_password_2026''',
+    '''podium_password''',
+    '''podiumhq_db''',
+    '''nonexistent-tag-999'''
+]

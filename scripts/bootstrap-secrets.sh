@@ -7,7 +7,7 @@
 set -euo pipefail
 
 NAMESPACE=${1:-"podiumhq"}
-DB_PASSWORD=${2:-"podium_secure_password_2026"}
+DB_PASSWORD=${2:-"podium_secure_password_2026"} # gitleaks:allow
 
 echo "[PodiumHQ] Provisioning database secret in namespace: $NAMESPACE..."
 
