@@ -585,24 +585,25 @@ PodiumHQ incorporates complete operational and business metric telemetry.
 
 ## 12. Evidence Gallery
 
-Screenshots documenting the verification checkpoints are stored in [`docs/evidence/screenshots/`](docs/evidence/screenshots/):
+A comprehensive visual catalog of all 24 verified screenshots is documented in [**`docs/evidence/screenshots/all-screenshots.md`**](docs/evidence/screenshots/all-screenshots.md).
 
-| # | Artifact / Checkpoint | Evidence File Path | Caption / Verification Proof |
-| :-: | :--- | :--- | :--- |
-| **01** | CI/CD Pipeline Execution | `docs/evidence/screenshots/01-cicd-pipeline-success.png` | <!-- TODO: add after recording --> GitHub Actions 3-stage pipeline passing green on main |
-| **02** | Gitleaks Secret Audit | `docs/evidence/screenshots/02-security-gitleaks-clean.png` | <!-- TODO: add after recording --> Zero leaks detected across repository git history |
-| **03** | Backend Pytest & Coverage | `docs/evidence/screenshots/03-backend-tests-coverage.png` | <!-- TODO: add after recording --> 31 passed tests, 90.4% code coverage report |
-| **04** | Frontend ESLint & Audit | `docs/evidence/screenshots/04-frontend-tests-audit.png` | <!-- TODO: add after recording --> Clean ESLint validation and 0 npm vulnerabilities |
-| **05** | Terraform Plan Output | `docs/evidence/screenshots/05-terraform-plan-success.png` | <!-- TODO: add after recording --> Terraform plan showing 30 AWS resources planned cleanly |
-| **06** | Docker Compose Stack | `docs/evidence/screenshots/06-docker-compose-running.png` | <!-- TODO: add after recording --> Backend, frontend, and postgres showing Up (healthy) |
-| **07** | Helm Lint & Template | `docs/evidence/screenshots/07-helm-lint-and-template.png` | <!-- TODO: add after recording --> 1 chart linted, 0 failed, manifests rendered cleanly |
-| **08** | Kubernetes Live Workloads | `docs/evidence/screenshots/08-k8s-pods-and-services.png` | <!-- TODO: add after recording --> All pods 1/1 Running in namespace podiumhq with PVC Bound |
-| **09** | PodiumHQ Web Application | `docs/evidence/screenshots/09-application-ui-browser.png` | <!-- TODO: add after recording --> React dashboard with Operational status and event cards |
-| **10** | Interactive Swagger API | `docs/evidence/screenshots/10-backend-api-swagger.png` | <!-- TODO: add after recording --> FastAPI OpenAPI documentation (/health, /ready, /api/events) |
-| **11** | Prometheus Metrics Stream | `docs/evidence/screenshots/11-prometheus-metrics-endpoint.png` | <!-- TODO: add after recording --> Raw text exposition of http_requests_total and custom gauges |
-| **12** | GHCR Container Packages | `docs/evidence/screenshots/12-ghcr-container-packages.png` | <!-- TODO: add after recording --> Published backend and frontend packages with commit SHA tags |
+| # | Artifact / Checkpoint | Primary Screenshot | Additional Verification Image | Rubric Module & Verification Proof |
+| :-: | :--- | :--- | :--- | :--- |
+| **01** | CI/CD Pipeline Automation | [`image.png`](docs/evidence/screenshots/image.png) | [`image-1.png`](docs/evidence/screenshots/image-1.png) | **M5 (15 Pts)**: GitHub Actions 4-stage pipeline passing green on main |
+| **02** | Gitleaks Secret Audit | [`image-2.png`](docs/evidence/screenshots/image-2.png) | — | **M6 (5 Pts)**: Zero leaks detected across all 21 git commits |
+| **03** | Backend Pytest & Coverage | [`image-3.png`](docs/evidence/screenshots/image-3.png) | — | **M2 (10 Pts)**: 31 passed tests, 90.39% code coverage table |
+| **04** | Frontend ESLint & Audit | [`image-4.png`](docs/evidence/screenshots/image-4.png) | — | **M2 & M6 (10 Pts)**: Clean ESLint and 0 npm production vulnerabilities |
+| **05** | Terraform Plan & Destroy | [`image-5.png`](docs/evidence/screenshots/image-5.png) | [`image-10.png`](docs/evidence/screenshots/image-10.png) | **M7 (15 Pts)**: Plan 30 AWS resources; verified clean teardown |
+| **06** | Docker Compose Stack | [`image-6.png`](docs/evidence/screenshots/image-6.png) | — | **M4 (10 Pts)**: Backend, frontend, postgres all Up (healthy) |
+| **07** | Non-Root Container Security | [`image-7.png`](docs/evidence/screenshots/image-7.png) | — | **M4 (10 Pts)**: Backend UID 10001 (`appuser`), Frontend UID 101 (`nginx`) |
+| **08** | Kubernetes Live Workloads | [`image-8.png`](docs/evidence/screenshots/image-8.png) | — | **M8 (15 Pts)**: Pods 1/1 Running in namespace podiumhq, PVC Bound |
+| **09** | Frontend Health & Headers | [`image-9.png`](docs/evidence/screenshots/image-9.png) | — | **M1 & M4 (10 Pts)**: HTTP 200 OK with hardened security headers |
+| **10** | PodiumHQ Web Application | [`image-11.png`](docs/evidence/screenshots/image-11.png) | [`image-18.png`](docs/evidence/screenshots/image-18.png), [`image-19.png`](docs/evidence/screenshots/image-19.png) | **M1 (10 Pts)**: Live Leaderboard, Teams Lifecycle, and Judge Scoring |
+| **11** | Interactive Swagger API | [`image-12.png`](docs/evidence/screenshots/image-12.png) | [`image-13.png`](docs/evidence/screenshots/image-13.png), [`image-14.png`](docs/evidence/screenshots/image-14.png) | **M1 (10 Pts)**: OpenAPI documentation for `/health`, `/ready`, `/api` |
+| **12** | Prometheus Telemetry Stream | [`image-16.png`](docs/evidence/screenshots/image-16.png) | [`image-21.png`](docs/evidence/screenshots/image-21.png) | **M9 (10 Pts)**: Raw `/metrics` stream and in-app Telemetry dashboard |
+| **13** | GHCR Container Packages | [`image-17.png`](docs/evidence/screenshots/image-17.png) | — | **M5 (15 Pts)**: Published images on GHCR tagged with Git commit SHAs |
 
-*A complete step-by-step screenshot capture guide is provided in [`docs/SCREENSHOT-EVIDENCE-GUIDE.md`](docs/SCREENSHOT-EVIDENCE-GUIDE.md).*
+*Detailed capture commands and rubric criteria mappings are documented in [`docs/SCREENSHOT-EVIDENCE-GUIDE.md`](docs/SCREENSHOT-EVIDENCE-GUIDE.md) and [`docs/evidence/screenshots/all-screenshots.md`](docs/evidence/screenshots/all-screenshots.md).*
 
 ---
 
