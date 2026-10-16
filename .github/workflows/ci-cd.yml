@@ -160,7 +160,7 @@ jobs:
 
       # Trivy Scan Backend Image (Quality Gate: High/Critical Detection)
       - name: Trivy Vulnerability Scan (Backend)
-        uses: aquasecurity/trivy-action@0.24.0
+        uses: aquasecurity/trivy-action@master
         with:
           image-ref: ${{ env.BACKEND_IMAGE }}:${{ env.IMAGE_TAG }}
           format: "table"
@@ -171,7 +171,7 @@ jobs:
 
       - name: Trivy SARIF Output (Backend)
         if: always()
-        uses: aquasecurity/trivy-action@0.24.0
+        uses: aquasecurity/trivy-action@master
         with:
           image-ref: ${{ env.BACKEND_IMAGE }}:${{ env.IMAGE_TAG }}
           format: "sarif"
@@ -193,7 +193,7 @@ jobs:
 
       # Trivy Scan Frontend Image (Quality Gate: High/Critical Detection)
       - name: Trivy Vulnerability Scan (Frontend)
-        uses: aquasecurity/trivy-action@0.24.0
+        uses: aquasecurity/trivy-action@master
         with:
           image-ref: ${{ env.FRONTEND_IMAGE }}:${{ env.IMAGE_TAG }}
           format: "table"
@@ -204,7 +204,7 @@ jobs:
 
       - name: Trivy SARIF Output (Frontend)
         if: always()
-        uses: aquasecurity/trivy-action@0.24.0
+        uses: aquasecurity/trivy-action@master
         with:
           image-ref: ${{ env.FRONTEND_IMAGE }}:${{ env.IMAGE_TAG }}
           format: "sarif"
