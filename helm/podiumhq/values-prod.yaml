@@ -1,21 +1,21 @@
 global:
   environment: production
   namespace: podiumhq
-
 backend:
   replicaCount: 2
   autoscaling:
     enabled: true
     minReplicas: 2
     maxReplicas: 6
-
+  image:
+    tag: 8e0a442dc92dd764df45c1320e1f4d7c9dd0c817
 frontend:
   replicaCount: 2
-
+  image:
+    tag: 8e0a442dc92dd764df45c1320e1f4d7c9dd0c817
 postgres:
   persistence:
     size: 20Gi
     storageClass: "gp3"
-
 ingress:
   host: "podiumhq.production.domain"
