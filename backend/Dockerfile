@@ -42,17 +42,23 @@ RUN groupadd -g 10001 appgroup && \
     useradd -u 10001 -g appgroup -s /bin/sh -m appuser
 
 WORKDIR /app
+RUN chown -R appuser:appgroup /app
 
 # Copy installed python dependencies from builder
 COPY --from=builder --chown=appuser:appgroup /root/.local /home/appuser/.local
 
-# Copy application code and migrations
+# Copy application code, configuration, tests and migrations
 COPY --chown=appuser:appgroup alembic.ini .
+COPY --chown=appuser:appgroup pytest.ini .
 COPY --chown=appuser:appgroup alembic/ ./alembic/
 COPY --chown=appuser:appgroup app/ ./backend/app/
+COPY --chown=appuser:appgroup tests/ ./tests/
 COPY --chown=appuser:appgroup entrypoint.sh .
 
-RUN chmod +x entrypoint.sh
+RUN touch ./backend/__init__.py && \
+    ln -s /app/backend/app /app/app && \
+    chmod +x entrypoint.sh && \
+    chown -R appuser:appgroup /app
 
 USER appuser:appgroup
 

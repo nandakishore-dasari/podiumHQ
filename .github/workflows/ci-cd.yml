@@ -1,0 +1,278 @@
+name: PodiumHQ CI/CD Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  # ==============================================================================
+  # Job 1: Lint, Unit Test, Coverage Gate, Frontend Build
+  # ==============================================================================
+  lint-test:
+    name: Lint & Test Suite
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install Backend Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r backend/requirements-dev.txt
+
+      - name: Run Ruff Lint Check
+        run: |
+          ruff check --config backend/ruff.toml backend
+
+      - name: Run Pytest Suite with Coverage Gate (>= 80%)
+        run: |
+          cd backend
+          python -m pytest -v --cov=app --cov-report=term-missing --cov-report=xml --cov-fail-under=80
+
+      - name: Upload Test Coverage Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-coverage-report
+          path: backend/coverage.xml
+          retention-days: 7
+
+      - name: Set up Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install Frontend Dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Run ESLint
+        working-directory: frontend
+        run: npm run lint
+
+      - name: Build Frontend Production Bundle
+        working-directory: frontend
+        run: npm run build
+
+  # ==============================================================================
+  # Job 2: Secret Scanning & Dependency Vulnerability Audits
+  # ==============================================================================
+  secrets-and-deps:
+    name: Secret & Dependency Audits
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run Gitleaks Secret Scanner
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Run pip-audit on Backend Dependencies
+        run: |
+          python -m pip install --upgrade pip pip-audit
+          pip-audit -r backend/requirements.txt
+
+      - name: Set up Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Run npm audit on Frontend Dependencies
+        working-directory: frontend
+        run: |
+          npm audit --audit-level=high
+
+  # ==============================================================================
+  # Job 3: Hardened Container Build, Trivy Vulnerability Gate, GHCR Push
+  # ==============================================================================
+  build-scan-push:
+    name: Build, Scan & Push (GHCR)
+    needs: [lint-test, secrets-and-deps]
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      packages: write
+      security-events: write
+    env:
+      REGISTRY: ghcr.io
+      BACKEND_IMAGE: ghcr.io/${{ github.repository_owner }}/podiumhq-backend
+      FRONTEND_IMAGE: ghcr.io/${{ github.repository_owner }}/podiumhq-frontend
+      IMAGE_TAG: ${{ github.sha }}
+      SHORT_SHA: ${{ github.sha }}
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to GitHub Container Registry (GHCR)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Build Backend Image Locally for Scanning
+      - name: Build Backend Image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./backend
+          file: ./backend/Dockerfile
+          load: true
+          tags: ${{ env.BACKEND_IMAGE }}:${{ env.IMAGE_TAG }}
+          cache-from: type=gha,scope=backend
+          cache-to: type=gha,mode=max,scope=backend
+
+      # Trivy Scan Backend Image (Quality Gate: Exit 1 on HIGH/CRITICAL)
+      - name: Trivy Vulnerability Scan (Backend)
+        uses: aquasecurity/trivy-action@0.24.0
+        with:
+          image-ref: ${{ env.BACKEND_IMAGE }}:${{ env.IMAGE_TAG }}
+          format: "table"
+          exit-code: "1"
+          ignore-unfixed: true
+          vuln-type: "os,library"
+          severity: "HIGH,CRITICAL"
+
+      - name: Trivy SARIF Output (Backend)
+        if: always()
+        uses: aquasecurity/trivy-action@0.24.0
+        with:
+          image-ref: ${{ env.BACKEND_IMAGE }}:${{ env.IMAGE_TAG }}
+          format: "sarif"
+          output: "trivy-backend-results.sarif"
+          severity: "HIGH,CRITICAL"
+
+      - name: Upload Backend SARIF Report
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: "trivy-backend-results.sarif"
+          category: "trivy-backend"
+        continue-on-error: true
+
+      # Build Frontend Image Locally for Scanning
+      - name: Build Frontend Image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./frontend
+          file: ./frontend/Dockerfile
+          load: true
+          tags: ${{ env.FRONTEND_IMAGE }}:${{ env.IMAGE_TAG }}
+          cache-from: type=gha,scope=frontend
+          cache-to: type=gha,mode=max,scope=frontend
+
+      # Trivy Scan Frontend Image (Quality Gate: Exit 1 on HIGH/CRITICAL)
+      - name: Trivy Vulnerability Scan (Frontend)
+        uses: aquasecurity/trivy-action@0.24.0
+        with:
+          image-ref: ${{ env.FRONTEND_IMAGE }}:${{ env.IMAGE_TAG }}
+          format: "table"
+          exit-code: "1"
+          ignore-unfixed: true
+          vuln-type: "os,library"
+          severity: "HIGH,CRITICAL"
+
+      - name: Trivy SARIF Output (Frontend)
+        if: always()
+        uses: aquasecurity/trivy-action@0.24.0
+        with:
+          image-ref: ${{ env.FRONTEND_IMAGE }}:${{ env.IMAGE_TAG }}
+          format: "sarif"
+          output: "trivy-frontend-results.sarif"
+          severity: "HIGH,CRITICAL"
+
+      - name: Upload Frontend SARIF Report
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: "trivy-frontend-results.sarif"
+          category: "trivy-frontend"
+        continue-on-error: true
+
+      # Push Images to GHCR with Commit SHA Tag (Never :latest)
+      - name: Push Backend Image to GHCR (SHA Tag Only)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          docker push ${{ env.BACKEND_IMAGE }}:${{ env.IMAGE_TAG }}
+
+      - name: Push Frontend Image to GHCR (SHA Tag Only)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          docker push ${{ env.FRONTEND_IMAGE }}:${{ env.IMAGE_TAG }}
+
+      - name: Generate Pipeline Step Summary
+        run: |
+          echo "### 🚀 PodiumHQ DevSecOps Build & Security Gate Summary" >> $GITHUB_STEP_SUMMARY
+          echo "| Artifact | Registry Reference | Tag / SHA | Quality Gate |" >> $GITHUB_STEP_SUMMARY
+          echo "|---|---|---|---|" >> $GITHUB_STEP_SUMMARY
+          echo "| Backend | \`${{ env.BACKEND_IMAGE }}\` | \`${{ env.IMAGE_TAG }}\` | ✅ Trivy Passed (0 High/Crit) |" >> $GITHUB_STEP_SUMMARY
+          echo "| Frontend | \`${{ env.FRONTEND_IMAGE }}\` | \`${{ env.IMAGE_TAG }}\` | ✅ Trivy Passed (0 High/Crit) |" >> $GITHUB_STEP_SUMMARY
+
+  # ==============================================================================
+  # Job 4: GitOps Image Tag Bump for ArgoCD Automated Deployment
+  # ==============================================================================
+  gitops-bump:
+    name: GitOps Image Tag Bump
+    needs: [build-scan-push]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up yq (YAML Processor)
+        uses: mikefarah/yq@v4.44.3
+
+      - name: Update Helm Production Values with Commit SHA
+        run: |
+          IMAGE_TAG="${{ github.sha }}"
+          echo "Updating helm/podiumhq/values-prod.yaml image.tag to ${IMAGE_TAG}..."
+          yq -i ".backend.image.tag = \"${IMAGE_TAG}\"" helm/podiumhq/values-prod.yaml
+          yq -i ".frontend.image.tag = \"${IMAGE_TAG}\"" helm/podiumhq/values-prod.yaml
+          git diff helm/podiumhq/values-prod.yaml
+
+      - name: Commit and Push GitOps Tag Bump
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add helm/podiumhq/values-prod.yaml
+          if git diff --staged --quiet; then
+            echo "No GitOps changes to commit."
+          else
+            git commit -m "chore(gitops): bump production image tag to ${{ github.sha }} [skip ci]"
+            git push origin main
+          fi
