@@ -19,8 +19,8 @@ FROM nginxinc/nginx-unprivileged:1.27-alpine AS runtime
 LABEL org.opencontainers.image.title="PodiumHQ Frontend" \
       org.opencontainers.image.description="React + Vite Frontend for PodiumHQ Hackathon & Event Judging Platform" \
       org.opencontainers.image.vendor="PodiumHQ" \
-      org.opencontainers.image.authors="nandukrishnak" \
-      org.opencontainers.image.source="https://github.com/nandukrishnak/podiumhq"
+      org.opencontainers.image.authors="nandakishore-dasari" \
+      org.opencontainers.image.source="https://github.com/nandakishore-dasari/podiumHQ"
 
 ENV BACKEND_HOST="backend" \
     BACKEND_PORT="8000"

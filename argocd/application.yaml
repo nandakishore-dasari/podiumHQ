@@ -8,7 +8,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/nandukrishnak/podiumhq.git
+    repoURL: https://github.com/nandakishore-dasari/podiumHQ.git
     targetRevision: HEAD
     path: helm/podiumhq
     helm:

@@ -1,7 +1,7 @@
 # PodiumHQ — Autonomous Hackathon & Event Judging Platform
 
-[![CI/CD Pipeline](https://github.com/nandukrishnak/podiumhq/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/nandukrishnak/podiumhq/actions)
-[![Security Scan](https://github.com/nandukrishnak/podiumhq/actions/workflows/security.yml/badge.svg)](https://github.com/nandukrishnak/podiumhq/actions)
+[![CI/CD Pipeline](https://github.com/nandakishore-dasari/podiumHQ/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/nandakishore-dasari/podiumHQ/actions)
+[![Security Scan](https://github.com/nandakishore-dasari/podiumHQ/actions/workflows/security.yml/badge.svg)](https://github.com/nandakishore-dasari/podiumHQ/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Coverage: 91%](https://img.shields.io/badge/Coverage-91%25-brightgreen.svg)](#test-automation)
 [![Non-Root Containers](https://img.shields.io/badge/Security-Non--Root-emerald.svg)](#container-security)

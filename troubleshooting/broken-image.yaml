@@ -15,6 +15,6 @@ spec:
     spec:
       containers:
         - name: backend
-          image: ghcr.io/nandukrishnak/podiumhq-backend:nonexistent-tag-999
+          image: ghcr.io/nandakishore-dasari/podiumhq-backend:nonexistent-tag-999
           ports:
             - containerPort: 8000
