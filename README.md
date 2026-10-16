@@ -16,7 +16,7 @@
 ---
 
 > ### 🎥 Project Demonstration & Slides
-> * **Demo Video**: `<!-- TODO: add after recording -->` <!-- Video walkthrough (6-8 mins) will be linked here once recorded: https://youtu.be/EXAMPLE or release asset -->
+> * **Demo Video**: [demo/walkthrough.mp4](demo/walkthrough.mp4) *(Full technical recorded walkthrough & live platform defense)*
 > * **Presentation Slides (PDF)**: [demo/slides.pdf](demo/slides.pdf)
 > * **Presentation Slides (PowerPoint)**: [demo/slides.pptx](demo/slides.pptx)
 > * **Student Presentation Deck**: [demo/presentation_student.pptx](demo/presentation_student.pptx)
@@ -616,7 +616,7 @@ A comprehensive visual catalog of all 24 verified screenshots is documented in [
 
 ## 13. Demo Video & Presentation Slides
 
-* **Demo Video**: `<!-- TODO: add after recording -->` *(Record a 6–8 minute walkthrough showing GitHub Actions, Terraform plan, Kubernetes workloads, web UI, and metrics. See [`docs/VIDEO_SCRIPT.md`](docs/VIDEO_SCRIPT.md) for the exact script).*
+* **Demo Video**: [demo/walkthrough.mp4](demo/walkthrough.mp4) *(Complete recorded walkthrough showing local Docker Compose, tests, CI/CD pipeline, Terraform, Kubernetes workloads, and Prometheus/Grafana observability).*
 * **Presentation Slides (PDF)**: [demo/slides.pdf](demo/slides.pdf)
 * **Presentation Slides (PowerPoint)**: [demo/slides.pptx](demo/slides.pptx)
 * **Student Presentation Deck**: [demo/presentation_student.pptx](demo/presentation_student.pptx)
@@ -678,7 +678,8 @@ podiumHQ/
 │   ├── presentation_student.pptx              # Student oral defense presentation
 │   ├── presentation.pptx                      # Technical presentation deck
 │   ├── slides.pdf                             # Compiled PDF presentation slides
-│   └── slides.pptx                            # 12-slide comprehensive presentation deck
+│   ├── slides.pptx                            # 12-slide comprehensive presentation deck
+│   └── walkthrough.mp4                        # Full recorded video walkthrough (Git LFS)
 ├── docs/
 │   ├── evidence/
 │   │   ├── screenshots/                       # 12 submission evidence screenshots (.gitkeep)
