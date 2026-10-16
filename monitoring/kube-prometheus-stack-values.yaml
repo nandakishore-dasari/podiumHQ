@@ -27,3 +27,13 @@ grafana:
 
 alertmanager:
   enabled: true
+
+# Disable bare-metal/unexposed control plane targets (managed by EKS / local VM)
+kubeEtcd:
+  enabled: false
+kubeControllerManager:
+  enabled: false
+kubeScheduler:
+  enabled: false
+kubeProxy:
+  enabled: false
