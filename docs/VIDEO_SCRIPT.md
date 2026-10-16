@@ -30,7 +30,7 @@
 ### 🕒 Minute 0:00 – 1:30 | Title & Project Overview
 * **What to Show on Screen**: Slides 1, 2, and 3 (`demo/slides.pptx`).
 * **What to Say**:
-  > *"Hello everyone and welcome to my DevSecOps Capstone presentation. My name is [Your Name], and today I am excited to present **PodiumHQ**, an autonomous, production-grade event judging and hackathon scoring platform.*  
+  > *"Hello everyone and welcome to my DevSecOps Capstone presentation. My name is D.N.Nanda kishore (Roll Number: 10024, Batch: A), and today I am excited to present **PodiumHQ**, an autonomous, production-grade event judging and hackathon scoring platform.*  
   >  
   > *For this capstone, instead of building a generic TaskBoard, I engineered an original domain platform where hackathon teams register projects, judges evaluate submissions across dynamic rounds against weighted criteria, and results are computed live on an automated leaderboard.*  
   >  
