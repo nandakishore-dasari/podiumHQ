@@ -19,7 +19,7 @@
 > * **Demo Video**: [demo/walkthrough.mp4](demo/walkthrough.mp4) *(Full technical recorded walkthrough & live platform defense)*
 > * **Presentation Slides (PDF)**: [demo/slides.pdf](demo/slides.pdf)
 > * **Presentation Slides (PowerPoint)**: [demo/slides.pptx](demo/slides.pptx)
-> * **Student Presentation Deck**: [demo/presentation_student.pptx](demo/presentation_student.pptx)
+
 
 ---
 
