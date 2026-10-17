@@ -149,7 +149,7 @@ curl.exe -I http://localhost:3000
 
 ---
 
-## 12. Prometheus Metrics Telemetry Stream
+## 12. Prometheus,grafana Metrics Telemetry Stream
 **Rubric:** Module 9 — Observability & Telemetry (10 Marks)  
 **Verification:** Raw Prometheus text exposition endpoint (`/metrics`) streaming real-time HTTP metrics, status code counts, latency histograms, and custom domain gauges.
 
@@ -158,6 +158,8 @@ curl.exe -s http://localhost:8000/metrics
 ```
 
 ![Prometheus Telemetry Metrics Stream](image-16.png)
+
+<img width="1096" height="732" alt="image" src="https://github.com/user-attachments/assets/1b916693-2233-4bb7-9ac7-1ce39a990a36" />
 
 ---
 
