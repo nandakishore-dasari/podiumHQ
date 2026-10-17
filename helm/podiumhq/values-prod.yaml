@@ -8,11 +8,11 @@ backend:
     minReplicas: 2
     maxReplicas: 6
   image:
-    tag: 6ebb70201a9377ebedd329bcaf439afc5a7dc609
+    tag: 0251dadfc5e9f7d6ea120979c9f81eb24507ac90
 frontend:
   replicaCount: 2
   image:
-    tag: 6ebb70201a9377ebedd329bcaf439afc5a7dc609
+    tag: 0251dadfc5e9f7d6ea120979c9f81eb24507ac90
 postgres:
   persistence:
     size: 20Gi
